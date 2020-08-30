@@ -6,5 +6,5 @@ app.use(express.json())
 app.get('/', (request, response) => {
     response.send('Running...')
 })
-
-app.listen(3000, () => console.log(`Listening...`))
+const port = process.env.PORT || 3000
+app.listen(port, () => console.log(`Listening...`))
