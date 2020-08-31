@@ -13,7 +13,7 @@ const pool = mysql.createPool({
     password: process.env.RDS_PASSWORD
 }).promise();
 
-app.get('/', (request, response) => {
+app.get('/', async (request, response) => {
     const [results] = await pool.query('SELECT * test')
     response.send(JSON.stringify(results))
 })
