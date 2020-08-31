@@ -12,7 +12,17 @@ const connection = mysql.createConnection({
 });
 
 app.get('/', (request, response) => {
-    response.send('Running...')
+    var message
+
+    connection.connect(function(err) {
+        if (err) {
+          message = 'Database connection failed: ' + err.stack
+          return;
+        }
+      
+        message = 'Connected to database.'
+      });
+    response.send(message)
 })
 const port = process.env.PORT || 3000
 app.listen(port, () => console.log(`Listening...`))
