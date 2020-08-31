@@ -14,7 +14,7 @@ const pool = mysql.createPool({
 }).promise();
 
 app.get('/', async (request, response) => {
-    const [results] = await pool.query('SELECT * test')
+    const [results] = await pool.query('SELECT * FROM test')
     response.send(JSON.stringify(results))
 })
 const port = process.env.PORT || 3000
