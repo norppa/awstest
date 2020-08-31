@@ -1,34 +1,21 @@
 const express = require('express')
-const mysql = require('mysql')
+const mysql = require('mysql2')
 const app = express()
 
 app.use(express.json())
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
+    connectionLimit: 10,
     host: process.env.RDS_HOSTNAME,
+    port: process.env.RDS_PORT,
+    database: process.env.RDS_DATABASE,
     user: process.env.RDS_USERNAME,
-    password: process.env.RDS_PASSWORD,
-    port: process.env.RDS_PORT
-});
+    password: process.env.RDS_PASSWORD
+}).promise();
 
 app.get('/', (request, response) => {
-    var message = 'Something strange in the neighbourhood?'
-
-    connection.connect(function (err) {
-        if (err) {
-            message = 'Database connection failed: ' + err.stack
-            console.log(message)
-            return response.send(message)
-        }
-
-        message = 'Connected to database.'
-        console.log(message)
-        return response.send(message)
-    });
-
-    console.log('should not get this far?')
-    response.send(message)
-
+    const [results] = await pool.query('SELECT * test')
+    response.send(JSON.stringify(results))
 })
 const port = process.env.PORT || 3000
 app.listen(port, () => console.log(`Listening...`))
